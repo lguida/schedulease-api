@@ -128,4 +128,4 @@ completeRouter
       .catch(next)
 })
 
-module.exports = CompleteService
+module.exports = completeRouter
