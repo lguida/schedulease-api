@@ -9,6 +9,8 @@ const peopleRouter = require('./people/people-router')
 const scheduleRouter = require('./schedule/schedule-router')
 const rolesRouter = require('./roles/roles-router')
 const timeslotsRouter = require('./timeslots/timeslots-router')
+const availRouter = require('./avail/avail-router')
+const completeRouter = require('./complete/complete-router')
 
 const app = express()
 
@@ -28,6 +30,8 @@ app.use('/api/people', peopleRouter)
 app.use('/api/schedules', scheduleRouter)
 app.use('/api/roles', rolesRouter)
 app.use('/api/timeslots', timeslotsRouter)
+app.use('/api/avail', availRouter)
+app.use('/api/complete', completeRouter)
 
 
 app.use(function errorHandler(error, req, res, next) {

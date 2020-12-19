@@ -1,6 +1,5 @@
 const path = require('path')
 const express = require('express')
-const xss = require('xss')
 const TimeslotsService = require('./timeslots-service')
 
 const timeslotsRouter = express.Router()
@@ -60,7 +59,7 @@ timeslotsRouter
                   error: { message: `Schedule doesn't have any timeslots or doesn't exist`}
               })
           }
-        res.json(roles.map(serializeTimeslot))
+        res.json(timeslots.map(serializeTimeslot))
       })
       .catch(next)
   })
