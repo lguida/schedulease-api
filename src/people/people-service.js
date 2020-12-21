@@ -18,6 +18,13 @@ const PeopleService = {
             .where('id', id)
             .first()
     },
+    getByUsernamePassword(knex, username, password) {
+        return knex
+            .from('people')
+            .where('username', username)
+            .where('password', password)
+            .first()
+    },
     deletePerson(knex, id) {
         return knex('people')
             .where({ id })

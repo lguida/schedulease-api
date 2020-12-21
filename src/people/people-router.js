@@ -51,6 +51,19 @@ peopleRouter
       .catch(next)
   })
 
+  peopleRouter
+  .route('/auth/:username/:password')
+  .get((req, res, next) => {
+    const knexInstance = req.app.get('db')
+    PeopleService.getByUsernamePassword(
+      knexInstance,
+      req.params.username, req.params.password)
+      .then(person => {
+        res.json(serializePerson(person))
+      })
+      .catch(next)
+  })
+  
 peopleRouter
   .route('/:person_id')
   .all((req, res, next) => {
