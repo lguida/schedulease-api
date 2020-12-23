@@ -23,7 +23,7 @@ const PeopleService = {
             .from('people')
             .where('username', username)
             .where('password', password)
-            .first()
+            .select('*')
     },
     deletePerson(knex, id) {
         return knex('people')

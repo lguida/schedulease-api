@@ -51,7 +51,7 @@ peopleRouter
       .catch(next)
   })
 
-  peopleRouter
+peopleRouter
   .route('/auth/:username/:password')
   .get((req, res, next) => {
     const knexInstance = req.app.get('db')
@@ -59,13 +59,18 @@ peopleRouter
       knexInstance,
       req.params.username, req.params.password)
       .then(person => {
-        res.json(serializePerson(person))
+        if (person.length === 0) {
+          return res.status(404).json({
+            error: { message: `Person doesn't exist` }
+          })
+        }
+        res.json(person)
       })
       .catch(next)
   })
   
 peopleRouter
-  .route('/:person_id')
+  .route('/id/:person_id')
   .all((req, res, next) => {
     PeopleService.getById(
       req.app.get('db'),
