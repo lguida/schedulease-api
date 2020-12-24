@@ -14,8 +14,8 @@ CREATE TABLE schedules (
     schedule_name TEXT NOT NULL,
     status TEXT,
     responses INTEGER NOT NULL DEFAULT 0,
-    start_date TIMESTAMP NOT NULL,
-    end_date TIMESTAMP NOT NULL,
+    start_date TEXT NOT NULL,
+    end_date TEXT NOT NULL,
     meeting_duration TEXT NOT NULL
 );
 
