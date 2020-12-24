@@ -13,7 +13,8 @@ const serializeSchedule = schedule => ({
   status: schedule.status,
   responses: schedule.responses,
   start_date: schedule.start_date,
-  end_date: schedule.end_date
+  end_date: schedule.end_date,
+  meeting_duration: schedule.meeting_duration
 })
 
 scheduleRouter
