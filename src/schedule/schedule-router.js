@@ -27,8 +27,8 @@ scheduleRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { people_id, schedule_name, status, responses, start_date, end_date } = req.body
-    const newSchedule = { people_id, schedule_name, responses, start_date, end_date }
+    const { people_id, schedule_name, status, responses, start_date, end_date, meeting_duration } = req.body
+    const newSchedule = { people_id, schedule_name, responses, start_date, end_date, meeting_duration }
 
     for (const [key, value] of Object.entries(newSchedule))
       if (value == null)
@@ -102,8 +102,8 @@ scheduleRouter
       .catch(next)
   })
   .patch(jsonParser, (req, res, next) => {
-    const { people_id, schedule_name, status, responses, start_date, end_date } = req.body
-    const scheduleToUpdate = { schedule_name, status, responses, start_date, end_date }
+    const { people_id, schedule_name, status, responses, start_date, end_date, meeting_duration } = req.body
+    const scheduleToUpdate = { schedule_name, status, responses, start_date, end_date, meeting_duration }
 
     if (people_id){
         return res.status(400).json({
