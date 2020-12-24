@@ -46,7 +46,7 @@ scheduleRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${schedule.id}`))
-          .json(serializeComment(schedule))
+          .json(serializeSchedule(schedule))
       })
       .catch(next)
   })
