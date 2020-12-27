@@ -40,7 +40,7 @@ timeslotsRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${timeslot.id}`))
-          .json(serializeComment(timeslot))
+          .json(serializeTimeslot(timeslot))
       })
       .catch(next)
   })

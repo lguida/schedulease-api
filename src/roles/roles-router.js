@@ -40,7 +40,7 @@ rolesRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${role.id}`))
-          .json(serializeComment(role))
+          .json(serializeRole(role))
       })
       .catch(next)
   })
