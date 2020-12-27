@@ -23,19 +23,20 @@ timeslotsRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { schedule_id, timeslot, day_name } = req.body
-    const newTimeslot = { schedule_id, timeslot, day_name }
+    req.body.map(body => {
+      const { schedule_id, timeslot, day_name } = body
+      const newTimeslot = { schedule_id, timeslot, day_name }
 
-    for (const [key, value] of Object.entries(newTimeslot))
-      if (value == null)
-        return res.status(400).json({
-          error: { message: `Missing '${key}' in request body` }
-        })
+      for (const [key, value] of Object.entries(newTimeslot))
+        if (value == null)
+          return res.status(400).json({
+            error: { message: `Missing '${key}' in request body` }
+          })
 
-    TimeslotsService.insertTimeslot(
-      req.app.get('db'),
-      newTimeslot
-    )
+      TimeslotsService.insertTimeslot(
+        req.app.get('db'),
+        newTimeslot
+      )
       .then(timeslot => {
         res
           .status(201)
@@ -43,6 +44,7 @@ timeslotsRouter
           .json(serializeTimeslot(timeslot))
       })
       .catch(next)
+    })
   })
 
 timeslotsRouter

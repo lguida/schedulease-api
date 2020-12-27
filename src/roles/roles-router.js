@@ -23,19 +23,20 @@ rolesRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { schedule_id, role_name } = req.body
-    const newRole = { schedule_id, role_name }
+    req.body.map(body => {
+      const { schedule_id, role_name } = body
+      const newRole = { schedule_id, role_name }
 
-    for (const [key, value] of Object.entries(newRole))
-      if (value == null)
-        return res.status(400).json({
-          error: { message: `Missing '${key}' in request body` }
-        })
+      for (const [key, value] of Object.entries(newRole))
+        if (value == null)
+          return res.status(400).json({
+            error: { message: `Missing '${key}' in request body` }
+          })
 
-    RoleService.insertRole(
-      req.app.get('db'),
-      newRole
-    )
+      RoleService.insertRole(
+        req.app.get('db'),
+        newRole
+      )
       .then(role => {
         res
           .status(201)
@@ -43,6 +44,7 @@ rolesRouter
           .json(serializeRole(role))
       })
       .catch(next)
+    })
   })
 
 rolesRouter
