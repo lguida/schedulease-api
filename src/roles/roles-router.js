@@ -23,8 +23,8 @@ rolesRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    req.body.map(body => {
-      const { schedule_id, role_name } = body
+    req.body.map(request => {
+      const { schedule_id, role_name } = request
       const newRole = { schedule_id, role_name }
 
       for (const [key, value] of Object.entries(newRole))
@@ -37,11 +37,30 @@ rolesRouter
         req.app.get('db'),
         newRole
       )
+      
       .then(role => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${role.id}`))
-          .json(serializeRole(role))
+        console.log(req.body.indexOf(request), req.body.length -1)
+        if (req.body.indexOf(request) === req.body.length -1 ){
+          const { schedule_id } = role
+          console.log(schedule_id)
+          RoleService.getByScheduleId(
+            req.app.get('db'),
+            schedule_id
+          )
+          .then(roles => {
+            if (roles.length === 0){
+              return res.status(404).json({
+                error: { message: `Schedule doesn't have any roles or doesn't exist`}
+              })
+            }
+            else{
+            res
+              .status(201)
+              .json(roles.map(serializeRole))
+            }
+          })
+          .catch(next)
+        }
       })
       .catch(next)
     })
