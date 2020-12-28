@@ -42,7 +42,7 @@ availRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${avail.id}`))
-          .json(serializeComment(avail))
+          .json(serializeAvail(avail))
       })
       .catch(next)
   })

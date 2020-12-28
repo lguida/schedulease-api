@@ -41,7 +41,7 @@ completeRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${complete.id}`))
-          .json(serializeComment(complete))
+          .json(serializeComplete(complete))
       })
       .catch(next)
   })
