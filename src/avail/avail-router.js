@@ -25,26 +25,46 @@ availRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { schedule_id, timeslot, role_name, people_id } = req.body
-    const newAvail = { schedule_id, timeslot, role_name, people_id }
-
-    for (const [key, value] of Object.entries(newAvail))
-      if (value == null)
-        return res.status(400).json({
-          error: { message: `Missing '${key}' in request body` }
-        })
-
-    AvailService.insertAvail(
-      req.app.get('db'),
-      newAvail
-    )
+    req.body.map(request => {
+      const { schedule_id, timeslot, role_name, people_id } = request
+      const newAvail = { schedule_id, timeslot, role_name, people_id }
+    
+      for (const [key, value] of Object.entries(newAvail)) {
+        if (value == null){
+          return res.status(400).json({
+            error: { message: `Missing '${key}' in request body` }
+          })
+        }
+      }
+      AvailService.insertAvail(
+        req.app.get('db'),
+        newAvail
+      )
       .then(avail => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${avail.id}`))
-          .json(serializeAvail(avail))
+        if (req.body.indexOf(request) === req.body.length -1 ){
+          const { schedule_id, people_id } = avail
+          AvailService.getByPeopleIdAndSched(
+            req.app.get('db'),
+            people_id,
+            schedule_id
+          )
+          .then(entries => {
+            if (entries.length === 0){
+              return res.status(404).json({
+                error: { message: `Schedule doesn't have any timeslots or doesn't exist`}
+              })
+            }
+            else{
+            res
+              .status(201)
+              .json(entries.map(serializeAvail))
+            }
+          })
+          .catch(next)
+        }
       })
       .catch(next)
+    })
   })
 
 availRouter

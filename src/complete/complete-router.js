@@ -24,26 +24,44 @@ completeRouter
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { schedule_id, timeslot, role_name, people_name } = req.body
-    const newComplete = { schedule_id, timeslot, role_name, people_name }
+    req.body.map(request => {
+      const { schedule_id, timeslot, role_name, people_name } = request
+      const newComplete = { schedule_id, timeslot, role_name, people_name }
 
-    for (const [key, value] of Object.entries(newComplete))
-      if (value == null)
-        return res.status(400).json({
-          error: { message: `Missing '${key}' in request body` }
-        })
+      for (const [key, value] of Object.entries(newComplete))
+        if (value == null)
+          return res.status(400).json({
+            error: { message: `Missing '${key}' in request body` }
+          })
 
-    CompleteService.insertComplete(
-      req.app.get('db'),
-      newComplete
-    )
+      CompleteService.insertComplete(
+        req.app.get('db'),
+        newComplete
+      )
       .then(complete => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${complete.id}`))
-          .json(serializeComplete(complete))
+        if (req.body.indexOf(request) === req.body.length -1 ){
+          const { schedule_id } = complete
+          AvailService.getByScheduleId(
+            req.app.get('db'),
+            schedule_id
+          )
+          .then(entries => {
+            if (entries.length === 0){
+              return res.status(404).json({
+                error: { message: `Schedule doesn't have any timeslots or doesn't exist`}
+              })
+            }
+            else{
+            res
+              .status(201)
+              .json(entries.map(serializeComplete))
+            }
+          })
+          .catch(next)
+        }
       })
-      .catch(next)
+    })
+    .catch(next)
   })
 
 completeRouter

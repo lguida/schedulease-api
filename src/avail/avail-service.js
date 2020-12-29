@@ -22,10 +22,18 @@ const AvailService = {
     },
 
     getByScheduleId(knex, scheduleId) {
-        return knex 
-            .from('avail')
-            .select("*")
-            .where('schedule_id', scheduleId)
+      return knex 
+          .from('avail')
+          .select("*")
+          .where('schedule_id', scheduleId)
+    },
+
+    getByPeopleIdAndSched(knex, peopleId, scheduleId){
+      return knex
+        .from('avail')
+        .where('people_id', peopleId)
+        .where('schedule_id', scheduleId)
+        .select('*')
     },
   
     deleteAvail(knex, id) {
