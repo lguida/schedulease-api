@@ -66,6 +66,19 @@ availRouter
       .catch(next)
     })
   })
+  
+availRouter
+  .route('/delete/:peopleId/:schedId')
+  .delete((req, res, next) => {
+    const knexInstance = req.app.get('db')
+    AvailService.deleteByPeopleIdAndSched(
+      knexInstance,
+      req.params.peopleId, req.params.schedId)
+      .then(numRowsAffected => {
+        res.status(204).end()
+      })
+      .catch(next)
+  })
 
 availRouter
   .route('/schedule/:schedule_id')

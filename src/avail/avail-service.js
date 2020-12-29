@@ -41,6 +41,13 @@ const AvailService = {
         .where({ id })
         .delete()
     },
+
+    deleteByPeopleIdAndSched(knex, peopleId, scheduleId){
+      return knex('avail')
+        .where('people_id', peopleId)
+        .where('schedule_id', scheduleId)
+        .delete('*')
+    },
   
     updateAvail(knex, id, newAvailFields) {
       return knex('avail')
