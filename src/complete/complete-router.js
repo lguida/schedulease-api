@@ -38,10 +38,11 @@ completeRouter
         req.app.get('db'),
         newComplete
       )
+
       .then(complete => {
         if (req.body.indexOf(request) === req.body.length -1 ){
           const { schedule_id } = complete
-          AvailService.getByScheduleId(
+          CompleteService.getByScheduleId(
             req.app.get('db'),
             schedule_id
           )
@@ -60,8 +61,8 @@ completeRouter
           .catch(next)
         }
       })
+      .catch(next)
     })
-    .catch(next)
   })
 
 completeRouter

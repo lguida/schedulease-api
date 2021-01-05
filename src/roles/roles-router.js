@@ -42,7 +42,6 @@ rolesRouter
         console.log(req.body.indexOf(request), req.body.length -1)
         if (req.body.indexOf(request) === req.body.length -1 ){
           const { schedule_id } = role
-          console.log(schedule_id)
           RoleService.getByScheduleId(
             req.app.get('db'),
             schedule_id
