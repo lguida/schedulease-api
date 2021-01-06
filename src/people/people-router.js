@@ -118,7 +118,9 @@ peopleRouter
       personToUpdate
     )
       .then(numRowsAffected => {
-        res.status(204).end()
+        res
+          .status(204)
+          .json(entries.map(serializePerson))
       })
       .catch(next)
   })
