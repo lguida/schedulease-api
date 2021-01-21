@@ -14,11 +14,11 @@ Note: Regular brackets `[]` here are used to show fields that require customized
 
 ### General endpoints
 All six tables include basic CRUD endpoints by using the following syntax:
-* GET all tables -- [base url]/[table name]/
-* POST content in header -- [base url]/[table name]/
-* GET entry with a given id -- [base url]/[table name]/[entry id]
-* DELETE entry with a given id -- [base url]/[table name]/[entry id]
-* PATCH entry with a given id -- [base url]/[table name]/[entry id]
+* GET all tables -- `[base url]/[table name]/`
+* POST content in header -- `[base url]/[table name]/`
+* GET entry with a given id -- `[base url]/[table name]/[entry id]`
+* DELETE entry with a given id -- `[base url]/[table name]/[entry id]`
+* PATCH entry with a given id -- `[base url]/[table name]/[entry id]`
 
 ### Special endpoints
 Below are the additional endpoints that are available.
@@ -89,15 +89,15 @@ For all POST requests, send a JSON object in the header with all of the required
 
 ### POSTing multiple objects in one request
 
-In some of the tables, it is possible to POST multiple objects in one request. For the `timeslots`, `roles`, `avail` and `complete` tables, you can send a list of objects by wrapping each object in curly brackets {}, separating each object using a comma, and wrapping the whole list of objects in regular brackets []. See example below:
+In some of the tables, it is possible to POST multiple objects in one request. For the `timeslots`, `roles`, `avail` and `complete` tables, you can send a list of objects by wrapping each object in curly brackets `{}`, separating each object using a comma, and wrapping the whole list of objects in regular brackets `[]`. See example below:
 
 [ <br/>
-    {<br/>
-        "Field1": "Obj1_value"<br/>
-    },<br/>
-    {<br/>
-        "Field1": "Obj2_value"<br/>
-    }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Field1": "Obj1_value"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Field1": "Obj2_value"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
 ]<br/>
 
 When you post multiple objects using this method, the response will include all of the added objects using the same syntax as is used to send the request.
