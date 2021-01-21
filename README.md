@@ -1,18 +1,104 @@
-# Express Boilerplate!
+# Schedulease-api
 
-This is a boilerplate project used for starting new projects!
+This repo includes the back-end for the app Schedulease. 
 
-## Set up
+The front-end client can be found here: https://schedulease.vercel.app/
+The back-end is deployed to Heroku here: https://secret-bayou-29151.herokuapp.com/api
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+The database is relational and includes 6 tables: `people`, `schedules`, `roles`, `timeslots`, `avail`, and `complete`.
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
-7. Edit the new .env file to replace the words "username" and "databasename" with the appropriate names for your project. Do the same for the config.js file.
+## Endpoints
+    The base fetch url is https://secret-bayou-29151.herokuapp.com/api/[insert table name]
+
+### General endpoints
+All six tables include basic CRUD endpoints by using the following syntax:
+* GET all tables -- [base url]/[table name]/
+* POST content in header -- [base url]/[table name]/
+* GET entry with a given id -- [base url]/[table name]/[entry id]
+* DELETE entry with a given id -- [base url]/[table name]/[entry id]
+* PATCH entry with a given id -- [base url]/[table name]/[entry id]
+
+### Special endpoints
+Below are the additional endpoints that are available.
+1. People:
+* GET person by username and password combo [base url]/people/auth/[username]/[password]
+* GET person by id [base url]/people/id/[target id]
+* PATCH and DELETE for `people` both require this syntax as well: [base url]/people/id/[target id]
+
+2. Schedules:
+* GET all schedules for a given user [base url]/schedules/user/[user id]
+
+
+3. Roles:
+* GET all roles for a given schedule [base url]/roles/schedule/[schedule id]
+
+4. Timeslots:
+* GET all timeslots for a given schedule [base url]/roles/schedule/[schedule id]
+
+5. Avail:
+* DELETE all avail matching a peopleId/scheduleId combo [base url]/avail/delete/[user id]/[schedule id]
+* GET all avail for a given schedule [base url]/avail/schedule/[schedule id]
+
+6. Complete:
+* GET all complete schedule entries for a given schedule [base url]/complete/schedule/[schedule id]
+
+## Header Object syntax for POST and PATCH
+For all POST requests, send a JSON object in the header with all of the required fields. For all PATCH requests, it is only necessary to send the field you wish to change in the JSON object header. Some fields cannot be changed once they are POSTed. The id for each entry is auto generated and returned with the POST request response. Unless otherwise indicated, all id's are integers and all other data types are strings.
+
+### Required and Optional fields 
+
+1. People:
+* email -- required
+* account -- required, boolean
+* first_name -- required
+* last_name -- required
+* username
+* password
+
+2. Schedules:
+* people_id -- required, not editable
+* schedule_name -- required
+* status
+* responses -- required, integer
+* start_date -- required
+* end_date -- required
+* meeting_duration -- required
+
+3. Roles
+* schedule_id -- required, not editable
+* role_name -- required
+
+4. Timeslots
+* schedule_id -- required, not editable
+* timeslot -- required (note: this is the time of day of the slot)
+* day_name -- required (note: this is the day of the week and the date of the timeslots)
+
+5. Avail
+* schedule_id -- required, not editable
+* timeslot -- required (note: this is the integer id of the corresponding entry in the `timeslots` table)
+* people_id -- required, not editable
+* role_name -- required (note: this is the string value of the role name, NOT the id from the `roles` table)
+
+6. Complete
+* schedule_id -- required, not editable
+* timeslot -- required (note: this is the integer id of the corresponding entry in the `timeslots` table)
+* people_name -- required (note: this is the string value of the user's first and last name concatenated, NOT the id from the `people` table)
+* role_name -- required (note: this is the string value of the role name, NOT the id from the `roles` table)
+
+### POSTing multiple objects in one request
+
+In some of the tables, it is possible to POST multiple objects in one request. For the `timeslots`, `roles`, `avail` and `complete` tables, you can send a list of objects by wrapping each object in curly brackets {}, separating each object using a comma, and wrapping the whole list of objects in regular brackets []. See example below:
+
+[
+    {
+        "Field1": "Obj1_value"
+    },
+    {
+        "Field1": "Obj2_value"
+    }
+]
+
+When you post multiple objects using this method, the response will include all of the added objects using the same syntax as is used to send the request.
 
 ## Scripts
 
@@ -22,6 +108,13 @@ Start nodemon for the application `npm run dev`
 
 Run the tests `npm test`
 
-## Deploying
+Deploy the updated project `npm run deploy`
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+## Tech Used
+* Node.js
+* Express 
+* PostgreSQL
+* Knex
+* NPM
+* Chai
+* Mocha
