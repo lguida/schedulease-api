@@ -1,7 +1,6 @@
 const knex = require('knex')
 const app = require('../src/app')
 const { makePeopleArray } = require('./people.fixures')
-//const { makeUsersArray } = require('./users.fixtures')
 
 describe('People Endpoints', function() {
   let db
@@ -45,40 +44,14 @@ describe('People Endpoints', function() {
       })
     })
 
-    /*
-    context(`Given an XSS attack article`, () => {
-      const { maliciousArticle, expectedArticle } = makeMaliciousArticle()
-      const testUsers = makeUsersArray()
-
-      beforeEach('insert malicious article', () => {
-        return db
-          .into('blogful_users')
-          .insert(testUsers)
-          .then(() => {
-            return db
-              .into('blogful_articles')
-              .insert([ maliciousArticle ])
-          })
-      })
-
-      it('removes XSS attack content', () => {
-        return supertest(app)
-          .get(`/api/articles`)
-          .expect(200)
-          .expect(res => {
-            expect(res.body[0].title).to.eql(expectedArticle.title)
-            expect(res.body[0].content).to.eql(expectedArticle.content)
-          })
-      })
-    })*/
   })
 
-  describe(`GET /api/people/:people_id`, () => {
+  describe(`GET /api/people/id/:people_id`, () => {
     context(`Given no people`, () => {
       it(`responds with 404`, () => {
         const personId = 123456
         return supertest(app)
-          .get(`/api/people/${personId}`)
+          .get(`/api/people/id/${personId}`)
           .expect(404, { error: { message: `Person doesn't exist` } })
       })
     })
@@ -96,38 +69,10 @@ describe('People Endpoints', function() {
         const personId = 2
         const expectedPerson = testPeople[personId - 1]
         return supertest(app)
-          .get(`/api/people/${personId}`)
+          .get(`/api/people/id/${personId}`)
           .expect(200, expectedPerson)
       })
     })
-
-    /*
-    context(`Given an XSS attack article`, () => {
-      const { maliciousArticle, expectedArticle } = makeMaliciousArticle()
-      const testUsers = makeUsersArray()
-
-      beforeEach('insert malicious article', () => {
-        return db
-          .into('blogful_users')
-          .insert(testUsers)
-          .then(() => {
-            return db
-              .into('blogful_articles')
-              .insert([ maliciousArticle ])
-          })
-      })
-
-      it('removes XSS attack content', () => {
-        return supertest(app)
-          .get(`/api/articles/${maliciousArticle.id}`)
-          .expect(200)
-          .expect(res => {
-            expect(res.body.title).to.eql(expectedArticle.title)
-            expect(res.body.content).to.eql(expectedArticle.content)
-          })
-      })
-    })
-    */
   })
 
   describe(`POST /api/people`, () => {
@@ -156,7 +101,7 @@ describe('People Endpoints', function() {
         })
         .then(res =>
           supertest(app)
-            .get(`/api/people/${res.body.id}`)
+            .get(`/api/people/id/${res.body.id}`)
             .expect(res.body)
         )
     })
@@ -186,7 +131,7 @@ describe('People Endpoints', function() {
           })
           .then(res =>
             supertest(app)
-              .get(`/api/people/${res.body.id}`)
+              .get(`/api/people/id/${res.body.id}`)
               .expect(res.body)
           )
     })
@@ -215,19 +160,6 @@ describe('People Endpoints', function() {
         })
     })
     
-    /*
-    it('removes XSS attack content from response', () => {
-      const { maliciousArticle, expectedArticle } = makeMaliciousArticle()
-      return supertest(app)
-        .post(`/api/articles`)
-        .send(maliciousArticle)
-        .expect(201)
-        .expect(res => {
-          expect(res.body.title).to.eql(expectedArticle.title)
-          expect(res.body.content).to.eql(expectedArticle.content)
-        })
-    })
-    */
   })
 
   describe(`DELETE /people/:person_id`, () => {
@@ -235,7 +167,7 @@ describe('People Endpoints', function() {
       it(`responds with 404`, () => {
         const personId = 123456
         return supertest(app)
-          .delete(`/api/people/${personId}`)
+          .delete(`/api/people/id/${personId}`)
           .expect(404, { error: { message: `Person doesn't exist` } })
       })
     })
@@ -251,9 +183,9 @@ describe('People Endpoints', function() {
 
       it('responds with 204 and removes the person', () => {
         const idToRemove = 2
-        const expectedPerson = testPerson.filter(person => person.id !== idToRemove)
+        const expectedPerson = testPeople.filter(person => person.id !== idToRemove)
         return supertest(app)
-          .delete(`/api/people/${idToRemove}`)
+          .delete(`/api/people/id/${idToRemove}`)
           .expect(204)
           .then(res =>
             supertest(app)
@@ -269,7 +201,7 @@ describe('People Endpoints', function() {
       it(`responds with 404`, () => {
         const personId = 123456
         return supertest(app)
-          .patch(`/api/people/${personId}`)
+          .patch(`/api/people/id/${personId}`)
           .expect(404, { error: { message: `Person doesn't exist` } })
       })
     })
@@ -298,12 +230,12 @@ describe('People Endpoints', function() {
           ...updatedPerson
         }
         return supertest(app)
-          .patch(`/api/people/${idToUpdate}`)
+          .patch(`/api/people/id/${idToUpdate}`)
           .send(updatedPerson)
           .expect(204)
           .then(res =>
             supertest(app)
-              .get(`/api/people/${idToUpdate}`)
+              .get(`/api/people/id/${idToUpdate}`)
               .expect(expectedPerson)
           )
       })
@@ -311,7 +243,7 @@ describe('People Endpoints', function() {
       it(`responds with 400 when no required fields supplied`,() => {
         const idToUpdate = 2
         return supertest(app)
-          .patch(`/api/people/${idToUpdate}`)
+          .patch(`/api/people/id/${idToUpdate}`)
           .send({ irrelevantField: 'foo' })
           .expect(400, {
             error: { message: `Request must contain either something to edit`}
@@ -329,7 +261,7 @@ describe('People Endpoints', function() {
           ...updatedPerson
         }
         return supertest(app)
-          .patch(`/api/people/${idToUpdate}`)
+          .patch(`/api/people/id/${idToUpdate}`)
           .send({
             ...updatedPerson,
             fieldToIgnore: 'should not be in GET response'
@@ -337,11 +269,43 @@ describe('People Endpoints', function() {
           .expect(204)
           .then(res =>
             supertest(app)
-              .get(`/api/people/${idToUpdate}`)
+              .get(`/api/people/id/${idToUpdate}`)
               .expect(expectedPerson)
           )
       })
     })
   })
+
+  describe(`GET /api/people/auth/:username/:password`, () => {
+    context(`Given there are no people`, () => {
+        it(`responds with 404`, () => {
+          const username = 'demo'
+          const password = 'demoPass'
+          return supertest(app)
+            .get(`/api/people/auth/${username}/${password}`)
+            .expect(404, { error: { message: `Person doesn't exist` } })
+        })
+    })
+  
+    context('Given there are people in the database', () => {
+        const testPeople = makePeopleArray()
+  
+        beforeEach('insert people', () => {
+          return db
+            .into('people')
+            .insert(testPeople)
+        })
+  
+        it(`responds with 200 and the person`, () => {
+          const username = 'lguida'
+          const password = 'lucypass1200'
+          const expectedPerson = testPeople[0]
+          return supertest(app)
+            .get(`/api/people/auth/${username}/${password}`)
+            .expect(200, [expectedPerson])
+        })
+    })
+  }) 
+
   //end of big describe
 })
